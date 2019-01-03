@@ -2,14 +2,17 @@ package watch2;
 
 import static java.lang.Math.PI;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Watch {
-    private double hours = Math.PI/2;
-    private double minutes = Math.PI/2;
-    private double seconds = Math.PI/2;
+    private Calendar calendar = new GregorianCalendar();
+    private double hours;
+    private double minutes;
+    private double seconds;
     private final Timer timer;
     private final List<Observer> observers = new ArrayList<>();
     private double SecondStep = 2 * PI / 60;
@@ -19,6 +22,9 @@ public class Watch {
     public Watch() {
         timer = new Timer();
         timer.schedule(timerTask(), 0, 1000);
+        hours = normalize(Math.PI/2 - ((calendar.get(Calendar.HOUR_OF_DAY)%12)*60*60 + calendar.get(Calendar.MINUTE)*60 + calendar.get(Calendar.SECOND))*HourStep);
+        minutes = normalize(Math.PI/2 - (calendar.get(Calendar.MINUTE)*60 + calendar.get(Calendar.SECOND))*MinuteStep);
+        seconds = normalize(Math.PI/2 - calendar.get(Calendar.SECOND)*SecondStep);
     }
 
     public double getHours() {
